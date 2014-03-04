@@ -4,9 +4,11 @@ block content
   h1 Slide
   p List of slide. Activate by clicking the button to the right
   ul(id="availableSlides", class="slides")
-      each slide in slides
-          li= slide.key
+      each availableSlide in slides.availableSlides
+          li(id=availableSlide.id)= availableSlide.key
   ul(id="activeSlides", class="slides")
+       each activeSlide in slides.activeSlides
+          li(id=activeSlide.id)= activeSlide.key
   style.
     #availableSlides, #activeSlides { list-style-type: none; margin: 0; padding: 0 0 2.5em; float: left; margin-right: 10px; }
     #availableSlides li, #activeSlides li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 120px; }
@@ -29,8 +31,11 @@ block content
         $( "#availableSlides, #activeSlides" ).sortable({
             connectWith : '.slides',
             stop : function(event, ui) {
+                var state = 0;
+                if (this.id == 'activeSlides') { state = 0 }
+                if (this.id == 'availableSlides') { state = 1 }
                 var socket = io.connect('http://localhost:8118');
-                socket.emit('slideUpdate', { my: 'data' });
+                socket.emit('slideUpdate', { slide : { 'id' : ui.item[0].id, 'state' : state }});
             }
         }).disableSelection();
       });

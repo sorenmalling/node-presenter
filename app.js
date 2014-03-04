@@ -24,6 +24,7 @@ app.use(function(err, req, res, next){
 	// handle however you like, special-case based on
 	// error properties, messages, request conditions etc
 	// here we'll just render an error page
+	console.log(err);
 	res.status(err.status || 500);
 	res.render('error', { error: err });
 })
@@ -40,11 +41,16 @@ app.get('/', function (req, res) {
 app.get('/slides', slideController.index);
 
 io.sockets.on('connection', function (socket) {
-	clients.push(socket); 
+	//clients.push(socket); 
 	socket.on('slideUpdate', function(socket) {
-		database.save({
-			name: 'random slide',
-			content: 'random slide content'
+		database.merge(socket.slide.id, {
+			state : socket.slide.state
+		}, function (err, res) {
+			if (err) {
+				// Handle error
+			} else {
+				// Handle success
+			}
 		});
 	});
 });
