@@ -1,0 +1,36 @@
+extends ../layout
+
+block content
+  h1 Slide
+  p List of slide. Activate by clicking the button to the right
+  ul(id="availableSlides", class="slides")
+      each slide in slides
+          li= slide.key
+  ul(id="activeSlides", class="slides")
+  style.
+    #availableSlides, #activeSlides { list-style-type: none; margin: 0; padding: 0 0 2.5em; float: left; margin-right: 10px; }
+    #availableSlides li, #activeSlides li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 120px; }
+    ul.slides li {
+        border: 1px solid #000000;
+    }
+    ul {
+        width: 200px;
+        background-color: lightgrey;
+        min-height: 200px;
+    }
+    ul#availableSlides li {
+        background-color: blue;
+    }
+    ul#activeSlides li {
+        background-color: yellow;
+    }
+  script.
+      $( document ).ready(function() {
+        $( "#availableSlides, #activeSlides" ).sortable({
+            connectWith : '.slides',
+            stop : function(event, ui) {
+                var socket = io.connect('http://localhost:8118');
+                socket.emit('slideUpdate', { my: 'data' });
+            }
+        }).disableSelection();
+      });

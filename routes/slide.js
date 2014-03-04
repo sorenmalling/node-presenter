@@ -4,5 +4,6 @@
  */
 
 exports.list = function(req, res){
-  res.render('slide/list', { title: 'Express' });
+	res.assign('slides', 'slides');
+	res.render('slide/list', { title: 'Express' });
 };

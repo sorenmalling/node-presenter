@@ -5,4 +5,12 @@ block content
   p List of slide. Activate by clicking the button to the right
   table
       tr
-          td ost
+          th(colspan=3) Some header
+      each slide in slides
+          tr
+              td X
+              td Header
+              td X
+      else
+          tr
+              td(colspan=3) No slides.. :-(
